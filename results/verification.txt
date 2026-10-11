@@ -1,0 +1,13 @@
+test_aliasing_and_no_noise_learning (test_independent.ExactChecks) ... ok
+test_attained_minimax_diameter (test_independent.ExactChecks) ... ok
+test_damping_formula (test_independent.ExactChecks) ... ok
+test_general_zonotope_gauge (test_independent.ExactChecks) ... ok
+test_posterior_against_independent_inversion (test_independent.ExactChecks) ... ok
+test_resolution_constrained_global_choice (test_independent.ExactChecks) ... ok
+test_safe_intervals_against_scalar_convex_root (test_independent.ExactChecks) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.395s
+
+OK
+200 independent safe-interval checks, max error 1.9845236565174673e-14

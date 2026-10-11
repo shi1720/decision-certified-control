@@ -1,0 +1,26 @@
+[
+  {
+    "plant": "rotation8",
+    "mean_difference": -0.2418463461315331,
+    "lower": -0.24595268146859553,
+    "upper": -0.2377078247601218
+  },
+  {
+    "plant": "rotation24",
+    "mean_difference": -0.5944640327419645,
+    "lower": -0.6375277744831066,
+    "upper": -0.5504667206585088
+  },
+  {
+    "plant": "nonoscillatory",
+    "mean_difference": 0.0,
+    "lower": 0.0,
+    "upper": 0.0
+  },
+  {
+    "plant": "mixed3d",
+    "mean_difference": 0.0,
+    "lower": 0.0,
+    "upper": 0.0
+  }
+]

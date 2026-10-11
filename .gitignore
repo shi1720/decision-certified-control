@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.log
+*.aux
+*.out
+*.blg
+*.bbl
+*.synctex.gz
+paper/build/
+.venv/
