@@ -1,0 +1,1 @@
+The manuscript, generated figures, and benchmark data in this repository are licensed under the Creative Commons Attribution 4.0 International license: https://creativecommons.org/licenses/by/4.0/ . Attribute Shivam Gupta and the paper title. The software is licensed separately under the MIT license in LICENSE. The conference-supplied template retains its upstream notices.

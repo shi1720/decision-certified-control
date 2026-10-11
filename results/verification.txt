@@ -1,13 +1,13 @@
-test_aliasing_and_no_noise_learning (test_independent.ExactChecks) ... ok
-test_attained_minimax_diameter (test_independent.ExactChecks) ... ok
-test_damping_formula (test_independent.ExactChecks) ... ok
-test_general_zonotope_gauge (test_independent.ExactChecks) ... ok
-test_posterior_against_independent_inversion (test_independent.ExactChecks) ... ok
-test_resolution_constrained_global_choice (test_independent.ExactChecks) ... ok
-test_safe_intervals_against_scalar_convex_root (test_independent.ExactChecks) ... ok
+test_decision_sandwich_and_compaction (test_certificates.CertificateChecks) ... ok
+test_irredundant_polygon (test_certificates.CertificateChecks) ... ok
+test_one_input_projection_against_interval (test_certificates.CertificateChecks) ... ok
+test_prior_backup_for_all_box_models (test_certificates.CertificateChecks) ... ok
+test_support_against_vertex_enumeration (test_certificates.CertificateChecks) ... ok
+test_witness_screening (test_certificates.CertificateChecks) ... ok
+test_nonextension_rejected (test_streaming.StreamingChecks) ... ok
+test_remap_and_portability (test_streaming.StreamingChecks) ... ok
 
 ----------------------------------------------------------------------
-Ran 7 tests in 1.395s
+Ran 8 tests in 2.304s
 
 OK
-200 independent safe-interval checks, max error 1.9845236565174673e-14

@@ -1,96 +1,58 @@
-# Safe holds and endpoint-only actuator identification
+# Decision-Certified Compression for Safe Control with Unknown Linear Dynamics
 
-Research manuscript by **Shivam Gupta**:
-**When Safe Holds Hide Actuator Gains: Exact Resolution-Constrained Observation Scheduling**.
+Research artifact by **Shivam Gupta**, prepared for L4DC 2027. This is a full-matrix study of a deterministic archive/controller certificate architecture, with executable experiments and retained numerical evidence. It does not claim acceptance or hardware validation.
 
-This repository studies a known discrete state matrix, an unknown constant scalar
-actuator gain, held inputs, endpoint-only state observations, and bounded process
-disturbances. The paper derives the exact next-observation worst-case parameter
-diameter, an exact safe duration frontier, a stable cancellation family, and an
-optimal-resolution short-probe construction requiring at most one extra endpoint
-under its stated feasibility assumptions.
+Selected data enlarge the uncertainty set and certify a safe action. Feasible full-history model witnesses relax the robust safety filter and supply a lower intervention-cost bound. Their gap decides whether the controller can accept locally or must query the archive. Sparse LP and QP supports compact both sides after acceptance. Incoming data must screen cached model witnesses.
 
-The manuscript is prepared for L4DC 2027. It is **not an accepted publication**.
-No acceptance probability or exhaustive novelty guarantee is claimed.
+The exact-arithmetic bounds are at most `2*n*(n+m)` selected scalar data inequalities and `m` row-model witnesses for box constraints and row-separable full-matrix uncertainty. Prior constraints are always retained. This bounds post-query local information, not archive memory, temporary refinement memory, iteration count, or total computation. The supplied implementation validates floating-point witnesses to stated tolerances; it is not an interval-certified control library.
 
-## Paper and evidence
+## Contents
 
-- [Paper PDF](paper.pdf): 10 main-text pages, references and appendices; 4 figures.
-- [LaTeX source](paper/manuscript.tex), [references](paper/references.bib).
-- [Frozen experiment plan](EXPERIMENT_PLAN.md).
-- [Literature and application assessment](RESEARCH_ASSESSMENT.md).
-- [Independent test report](results/verification.txt).
-- [Saved-data audit](results/saved_audit.json).
-
-The main evaluation contains **2,400 episodes**, **576,000 physical transitions**,
-and **145,296 endpoint observations** across six design rules, four simulated
-plants and two disturbance regimes. A separate 200-episode sensitivity experiment
-checks a fixed error in the known dynamics matrix. An analytic sweep has 2,880
-parameter-duration cases. Every result is computed from executable code.
-
-On the two oscillatory plants, longest holds use 10 observations without reaching
-the gain-resolution target. A short minimax probe followed by long holds uses 11
-and reaches it. The nonoscillatory and mixed-mode controls show that this failure
-is not universal. A Gaussian proxy is a controlled objective comparator, not a
-replication of a complete published controller.
+- `paper/main.pdf`: complete submission manuscript; ten main pages followed by references/appendices.
+- `src/certified.py`: full-history support oracle, robust filter, two-sided cache, append-only screening.
+- `src/portable.py`: standalone controller using exported selected inequalities and witnesses, without raw history.
+- `benchmarks.py`: all four plants, prior-safe sequential data, common-query generator, subset baselines.
+- `run_study.py`, `run_all.py`: primary experiment, with every method and failure retained.
+- `run_closed_loop.py`, `run_streaming.py`, `run_ablation.py`, `run_scaling.py`: secondary studies.
+- `results/`: all primary transition archives, query/action arrays, closed-loop trajectories, streaming payloads, scalar counterexample, CSV summaries, timing records, and audit.
+- `tests/`: independent vertex enumeration, analytic one-input projections, compaction/containment, append-ID and portable-controller checks.
+- `EXPERIMENT_PLAN.md`: design specification and pilot amendments recorded before the corresponding runs.
+- `RESEARCH_ASSESSMENT.md`: related-work positioning and limits of novelty/commercial claims.
 
 ## Reproduce
 
-Tested with Python 3.9.6 and the package versions in `requirements.txt`.
-A virtual environment is recommended:
+Python 3.9 or newer; the recorded environment used Python 3.9.6, NumPy 1.26.4, SciPy 1.13.1, pandas 2.2.2, and matplotlib 3.9.4 on arm64 macOS. Install the versions in `requirements.txt` in a virtual environment. Run from this repository's root:
 
 ```sh
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
 python3 -m unittest discover -s tests -v
-python3 run_experiments.py
-python3 run_mismatch.py
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_all.py
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_closed_loop.py
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_streaming.py
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_ablation.py
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_scaling.py
 python3 analyze.py
-python3 audit_saved.py
-./build_paper.sh
+python3 build_paper.py
 ```
 
-`build_paper.sh` requires [Tectonic](https://tectonic-typesetting.github.io/).
-It builds `paper/build/manuscript.pdf`. The supplied L4DC template is retained;
-the year and running manuscript header are overridden, and the accepted-paper
-option is disabled. The conference's linked template was labeled 2026 on
-11 October 2026.
+The experiment scripts overwrite their own results. Preserve the supplied release if comparing reruns. `run_all.py` uses at most two processes. Secondary scripts can be run sequentially. Full execution took minutes per experiment on the recorded machine; different environments and network-free solver setups change timing. `analyze.py` independently audits all retained data and produces manuscript figures and summaries. `build_paper.py` synchronizes the generated full table and calls the installed `tectonic` compiler using the conference-linked class file. Tectonic may download standard TeX packages on its first run.
 
-No model-service calls, credentials, downloaded datasets, or network requests
-are needed to reproduce experiments. Tectonic may download TeX packages on the
-first build. Timings and environment metadata vary by machine; the scientific
-values and seeded trajectories are deterministic for the tested environment.
+To verify the delivered evidence without rerunning benchmarks:
 
-## Data schema
+```sh
+python3 -m unittest discover -s tests -v
+python3 analyze.py
+```
 
-- `results/runs.csv`: one row per main episode in archive order, including seed,
-  plant, gain, rule, noise regime, final diameter, observations, state peak,
-  resolution time, input energy, consistency counts, and runtime.
-- `results/physical_trajectories.npz`: `states[run,0:241,dimension]`,
-  `inputs[run,0:240]`, `disturbances[run,0:240,dimension]`; two-dimensional
-  systems use NaN padding in dimension 3. Run order matches `runs.csv`.
-- `results/endpoints.csv.gz`: every endpoint, with zero-based `run_index`, time,
-  posterior bounds, duration, command, norm, and diameter certificate.
-- `results/summary.csv`: per-plant/regime/rule means and sample SDs.
-- `results/contrasts.json`: paired RCD-minus-longest final-width differences,
-  with 98.75% marginal bootstrap intervals allocated across four comparisons.
-- `results/mismatch.csv`: sensitivity episodes, stopping on an empty posterior.
-- `results/sweep.csv`: all deterministic sensitivity cases.
+The primary study comprises 96 histories, 98,304 sequential training transitions, 9,216 common queries, and 64,512 method-query evaluations. There are 168 closed-loop episodes (16,128 physical steps), 720 streaming queries, 768 scaling queries, and 768 ablation method-query evaluations. Both disturbance regimes share a parameter draw within a seed; bootstrap intervals cluster both regimes and all queries by the 12 independent seeds per plant.
 
-The adversarial noise depends on each policy and is not a common-noise paired
-trial. Random-noise comparisons use the same physical-time tape on each seed.
-An unresolved first target time is coded 241 (horizon 240); it is right censored.
+## Reading the results
 
-## Scope
+`results/audit.json` records checks and aggregate counts. `results/summary.csv` records per-plant/method means, seed-cluster bootstrap intervals, retention, archive calls, and timing splits. `results/noise_envelope_stress.csv` holds a worst-case exposure audit under larger deployment noise bounds, not a Monte Carlo violation rate. The main table reports scalar inequalities; fixed-budget baselines retain whole transitions and have a larger inequality budget. Boundary-noise subsets match full data numerically, an explicitly reported negative control. DCC is generally slower than the small-subset heuristics and faster than the full-data implementation in these primary experiments. No network latency was simulated.
 
-The implementation's closed forms assume scaled orthogonal dynamics and
-Euclidean state/disturbance balls. The general support/gauge theory is broader.
-Safety refers to every discrete physical step, not unmodeled continuous motion.
-Exact state measurements, a constant gain, and valid noise/model-error bounds
-are substantive assumptions. This is a theory and simulation contribution,
-not a hardware, LLM, tracking, energy-savings or commercial-adoption benchmark.
+The theoretical safety statement assumes exact measured states, a containing compact prior, correct known disturbance bounds, fixed dynamics, and a prior-safe invariant-set backup. One-step command intervention does not imply closed-loop asymptotic stability or a long-horizon regret guarantee. See the manuscript's limitations and numerical-verification appendix.
 
-Original code is MIT licensed. The manuscript is copyright Shivam Gupta.
-The third-party conference class is excluded from the original-code license
-and retains its source attribution.
+## Version history
+
+This repository supersedes the earlier scalar held-input identification study. The original version is preserved under Git tag `v1-scalar-study`; it is not the present submission and is not pooled with this study's experiments. The repository was renamed from `safe-dwell-identification` to reflect the new contribution.
+
+Code is MIT licensed. The manuscript and accompanying generated figures/data are released under CC BY 4.0; see `LICENSE` and `DATA_LICENSE.md`.

@@ -1,11 +1,11 @@
 cff-version: 1.2.0
-message: "Please cite the research manuscript if using this code or study."
-type: software
-title: "When Safe Holds Hide Actuator Gains: Exact Resolution-Constrained Observation Scheduling"
+message: "Please cite the manuscript if you use this research artifact."
+title: "Decision-Certified Compression for Safe Control with Unknown Linear Dynamics"
 authors:
   - family-names: Gupta
     given-names: Shivam
-version: 1.0.0
+version: 2.0.0
 date-released: 2026-10-11
-url: "https://github.com/shi1720/safe-dwell-identification"
-repository-code: "https://github.com/shi1720/safe-dwell-identification"
+url: "https://github.com/shi1720/decision-certified-control"
+type: software
+license: MIT

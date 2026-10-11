@@ -1,0 +1,18 @@
+{
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "numpy": "1.26.4",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "seeds": 12,
+  "queries": 96,
+  "N": 1024,
+  "methods": [
+    "full",
+    "DCC_1e-5",
+    "DCC_1e-3",
+    "random",
+    "logdet",
+    "rolling",
+    "prior"
+  ],
+  "elapsed": 673.020183375
+}

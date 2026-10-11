@@ -1,0 +1,8 @@
+{
+  "stale_upper": 0.08000000800000029,
+  "stale_lower": 0.0800000080000002,
+  "claimed_stale_gap": 8.326672684688674e-17,
+  "actual_new_optimum": 0.01999999999999999,
+  "actual_regret": 0.0600000080000003,
+  "invalidated": 1
+}

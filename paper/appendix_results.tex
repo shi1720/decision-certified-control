@@ -1,0 +1,29 @@
+Primary seeds are 2000--2011. Closed-loop, streaming, ablation, and scaling seeds are disjoint ranges 3000--3002, 4000--4002, 5000--5001, and 6000--6002. Geometry tests use separate seeds. A design pilot used eight queries per plant, motivated the declared boundary-query mixture, and is excluded from final statistics. No runs were discarded for unfavorable results. An initial performance pilot was stopped to remove redundant full-history audits from comparator timing; the entire primary study was then rerun under the frozen scientific specification.
+
+\begin{table}[ht]\centering
+\caption{DCC at $10^{-3}$: data retention, archive access, and mean time (ms). Prior and input constraints are always retained.}\label{tab:timing}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}\toprule
+Plant & Data mean & Data max & Local hit (\%) & Local ms & Archive ms & Full ms\\\midrule
+Thermal &31.7&47&43.4&7.62&14.90&48.69\\
+Mechanical &13.4&47&69.4&4.71&7.74&35.39\\
+Nonnormal &59.3&87&29.6&16.50&39.11&111.95\\
+Dense &71.7&152&91.2&7.13&7.99&100.08\\\bottomrule\end{tabular}\end{table}
+
+\begin{table}[ht]\centering
+\caption{Scaling endpoints. Mean retained scalar data inequalities and mean total query time (ms). Three seeds and 16 queries per seed; $m=2$. Intermediate lengths are retained in the repository.}\label{tab:scaling}
+\begin{tabular}{rrrrr}\toprule
+$n$ & $N$ & Data mean & Full ms & DCC ms\\\midrule
+2&128&6.38&3.51&4.21\\2&8192&6.81&137.85&37.15\\
+4&128&8.15&8.08&9.56\\4&8192&18.23&439.01&146.88\\
+8&128&14.98&20.05&21.68\\8&8192&32.88&1121.67&340.70\\
+12&128&20.08&32.75&25.78\\12&8192&23.94&2825.01&793.21\\\bottomrule\end{tabular}\end{table}
+
+\paragraph{Noise regimes.}
+Uniform-noise mean excess costs were $1.73\times10^{-8}$ and $1.34\times10^{-5}$ for DCC at $10^{-5}$ and $10^{-3}$. Boundary-noise means were $7.01\times10^{-10}$ and $4.62\times10^{-7}$. Fixed-budget methods had boundary-noise excess costs of order $10^{-16}$, while prior-only control remained conservative in both regimes (means $0.118$ and $0.126$). Noise regimes should therefore be reported separately.
+
+\paragraph{Independent trajectory audit.}
+The trajectory archive stores every state, input, reference, disturbance, and realized dynamics matrix for every closed-loop policy. Rechecking $x_{t+1}=\Theta[x_t;u_t]+w_t$ independently of the simulator verifies sequential consistency and state/input bounds. The primary training archive contains 98,304 transitions, excluding secondary training histories and rollouts. The 64,512 primary evaluations share 9,216 state/reference instances and must not be treated as independent statistical replicates.
+
+\paragraph{Noise-envelope stress audit.}
+Holding the 9,216 DCC ($10^{-3}$) query actions fixed, replace the deployment disturbance box by twice or five times the assumed bound. The true-model worst-case successor then exceeds the safe box in 4,666 or 4,832 queries, respectively, versus zero at the assumed bound. This is an adversarial envelope check, not a sampled disturbance violation rate or a retrained-controller comparison. It illustrates the need for a valid disturbance bound rather than claiming robustness to assumption violations.
